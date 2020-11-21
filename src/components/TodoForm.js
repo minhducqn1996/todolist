@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { TiEdit } from 'react-icons/ti';
 import { BiSearch } from 'react-icons/bi'
@@ -7,7 +7,6 @@ function TodoForm() {
 
     const [state, setState] = useState({
         nameTodo: '',
-        searchTodo: '',
         listFilter: [],
         todoList: [
             { name: 'hoc English' },
@@ -18,7 +17,14 @@ function TodoForm() {
         keyEdit: null,
     });
 
-    const listItems = state.todoList.map((item, key) =>
+    useEffect(() => {
+        setState((prevState) => ({
+            ...prevState,
+            listFilter: state.todoList,
+        }))
+    }, [state.todoList]);
+
+    const listItems = state.listFilter.map((item, key) =>
         <div key={key} className='todo-name'>
             <div>
                 {item.name}
@@ -36,12 +42,6 @@ function TodoForm() {
         </div>
     );
 
-    const words = ['spray', 'limit', 'elite', 'exuberant', 'destruction', 'present'];
-
-    const result = words.filter(word => word.length > 6);
-
-    console.log(result);
-
 
     const handleEdit = (key, item) => {
         setState((prevState) => ({
@@ -53,6 +53,13 @@ function TodoForm() {
     }
 
     const handleDelete = (key) => {
+        if (state.type === 'Edit' && key === state.keyEdit) {
+            setState((preState) => ({
+                ...preState,
+                nameTodo: '',
+                type: 'Add',
+            }));
+        }
         const arr = state.todoList;
         arr.splice(key, 1);
         setState((prevState) => ({
@@ -62,11 +69,26 @@ function TodoForm() {
     }
 
     const handleChange = e => {
-        setState(prevState => ({
-            ...prevState,
-            nameTodo: e.target.value,
-            searchTodo: e.target.value,
-        }))
+        if (state.type !== 'Search') {
+            setState(prevState => ({
+                ...prevState,
+                nameTodo: e.target.value,
+            }))
+        } else {
+            let arr = [];
+            state.todoList.filter(item => {
+                if (item.name.toLocaleLowerCase().search(e.target.value.toLocaleLowerCase()) !== -1) {
+                    arr.push(item);
+                }
+            })
+
+            setState(prevState => ({
+                ...prevState,
+                nameTodo: e.target.value,
+                listFilter: arr,
+            }));
+        }
+        
     };
 
     const handleSearch = () => {
@@ -92,14 +114,22 @@ function TodoForm() {
             }
         }
         if (type === 'Edit') {
-            arr[keyEdit].name = name;
-            setState(prevState => ({
-                ...prevState,
-                todoList: [...arr],
-                type: 'Add',
-                keyEdit: null,
-                nameTodo: '',
-            }))
+            if (arr[keyEdit]) {
+                arr[keyEdit].name = name;
+                setState(prevState => ({
+                    ...prevState,
+                    todoList: [...arr],
+                    type: 'Add',
+                    keyEdit: null,
+                    nameTodo: '',
+                }))
+            } else {
+                setState((preState) => ({
+                    ...preState,
+                    type: 'Add',
+                }))
+            }
+            
         }
         if (type === 'Search') {
             setState((prevState) => ({
@@ -108,8 +138,6 @@ function TodoForm() {
             }));
         }
     };
-
-
 
     return (
         <div className='todo-list'>
