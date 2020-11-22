@@ -15,6 +15,12 @@ function TodoForm() {
         key: '',
         type: 'Add',
         keyEdit: null,
+        iconSearch: (
+            <BiSearch
+                className='icon-search'
+                onClick={() => handleSearch()}
+            />
+        ),
     });
 
     useEffect(() => {
@@ -88,13 +94,14 @@ function TodoForm() {
                 listFilter: arr,
             }));
         }
-        
+
     };
 
     const handleSearch = () => {
         setState((prevState) => ({
             ...prevState,
             type: 'Search',
+            iconSearch: '',
         }));
     }
 
@@ -129,12 +136,18 @@ function TodoForm() {
                     type: 'Add',
                 }))
             }
-            
+
         }
         if (type === 'Search') {
             setState((prevState) => ({
                 ...prevState,
-                type: 'Add'
+                type: 'Add',
+                iconSearch: (
+                    <BiSearch
+                        className='icon-search'
+                        onClick={() => handleSearch()}
+                    />
+                ),
             }));
         }
     };
@@ -142,11 +155,11 @@ function TodoForm() {
     return (
         <div className='todo-list'>
             <div className='todo-header'>
-                <h2>Board Plan</h2>
-                <BiSearch
-                    className='icon-search'
-                    onClick={() => handleSearch()}
-                />
+                <div className='todo-title'>
+                    <h2>Board Plan</h2>
+                    {state.iconSearch}
+                </div>
+
                 <form className='todo-form'>
                     <input
                         type='text'

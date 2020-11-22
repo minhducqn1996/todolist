@@ -53,10 +53,6 @@ body {
   color: white;
 }
 
-.todo-list h2 {
-  color: white;
-}
-
 .todo-header {
   padding: 20px;
   border-radius: 10px 10px 0 0;
@@ -101,4 +97,15 @@ body {
   color: white;
   font-size: 22px;
   cursor: pointer;
+  margin: 25px 0 0 0;
+}
+
+.todo-title {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.todo-title h2 {
+  color: white;
+  width: 90%;
 }
