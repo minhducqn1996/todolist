@@ -9,8 +9,8 @@ function TodoForm() {
         nameTodo: '',
         listFilter: [],
         todoList: [
-            { name: 'hoc English' },
-            { name: 'hoc France' }
+            { done: false, name: 'hoc English' },
+            { done: false, name: 'hoc France' }
         ],
         key: '',
         type: 'Add',
@@ -31,9 +31,21 @@ function TodoForm() {
     }, [state.todoList]);
 
     const listItems = state.listFilter.map((item, key) =>
+
         <div key={key} className='todo-name'>
-            <div>
-                {item.name}
+            <div className='todo-right'>
+                <input
+                    type='checkbox'
+                    className='click-checkbox'
+                    onChange={(e) => handlCheckbox(e, key)}
+                >
+                </input>
+                <div
+                    className='name-todo'
+                    style={{ textDecoration: item.done ? "line-through" : "" }}
+                >
+                    {item.name}
+                </div>
             </div>
             <div className='icon-bt'>
                 <RiCloseCircleLine
@@ -48,6 +60,15 @@ function TodoForm() {
         </div>
     );
 
+    const handlCheckbox = (e, key) => {
+        state.todoList[key].done = e.target.checked;
+        let todo = state.todoList;
+
+        setState((prevState) => ({
+            ...prevState,
+            todoList: todo
+        }));
+    }
 
     const handleEdit = (key, item) => {
         setState((prevState) => ({
@@ -136,7 +157,6 @@ function TodoForm() {
                     type: 'Add',
                 }))
             }
-
         }
         if (type === 'Search') {
             setState((prevState) => ({

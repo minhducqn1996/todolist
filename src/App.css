@@ -109,3 +109,11 @@ body {
   color: white;
   width: 90%;
 }
+
+.click-checkbox {
+  margin-right: 10px;
+}
+
+.todo-right {
+  display: flex;
+}
