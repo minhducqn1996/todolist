@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 import TodoList from './components/Todolist';
 import TodoForm from './components/TodoForm';
 
 const App = () => {
+  const typeStringChange = useRef(null);
 
   const [state, setState] = useState({
     nameTodo: '',
@@ -16,7 +17,24 @@ const App = () => {
     key: '',
     type: 'Add',
     keyEdit: null,
+    pageChange: {
+      page: 1,
+      limit: 5,
+    }
   });
+
+  const handlePageValue = (pages) => {
+    const { page, limit } = state.pageChange;
+    console.log('page', page, 'limit', limit);
+    setState((preState) => ({
+      ...preState,
+      pageChange: {
+        page: pages,
+        limit: 5,
+      }
+    }))
+    console.log('pageChange', state.pageChange);
+  }
 
   useEffect(() => {
     setState((prevState) => ({
@@ -60,21 +78,37 @@ const App = () => {
     }));
   }
 
-  const handleChange = e => {
-    if (state.type !== 'Search') {
-      setState(prevState => ({
-        ...prevState,
-        nameTodo: e.target.value,
-      }))
-    } else {
-      let arr = state.todoList.filter(item => item.name.toLocaleLowerCase().search(e.target.value.toLocaleLowerCase()) !== -1)
-      setState(prevState => ({
-        ...prevState,
-        nameTodo: e.target.value,
-        listFilter: arr,
-      }));
+  const trigerFilter = (value) => {
+    if (typeStringChange) {
+      clearTimeout(typeStringChange.current)
     }
 
+    typeStringChange.current = setTimeout(() => {
+      let arr = state.todoList.filter(item => item.name.toLocaleLowerCase().search(value.toLocaleLowerCase()) !== -1)
+
+      setState(prevState => ({
+        ...prevState,
+        listFilter: [...arr],
+      }));
+    }, 300);
+
+    setState((preState) => ({
+      ...preState,
+      nameTodo: value,
+    }))
+  }
+
+  const handleChange = e => {
+    const value = e.target.value;
+
+    if (state.type === 'Search') {
+      trigerFilter(value)
+    }
+
+    setState(prevState => ({
+      ...prevState,
+      nameTodo: value,
+    }))
   };
 
   const handleSearch = () => {
@@ -141,6 +175,8 @@ const App = () => {
           checkBox={handlCheckbox}
           deleted={handleDelete}
           edit={handleEdit}
+          onClick={handlePageValue}
+          pageChangeValue={state.pageChange}
         />
 
       </div>

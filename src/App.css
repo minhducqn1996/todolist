@@ -117,3 +117,33 @@ body {
 .todo-right {
   display: flex;
 }
+
+.handle-list {
+  max-height: 430px;
+}
+
+.button-pre {
+  background: transparent;
+  margin: 10px;
+  border: none;
+  outline: none;
+}
+
+.button-next {
+  background: transparent;
+  margin: 10px;
+  border: none;
+  outline: none;
+}
+
+.button-number {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 18px;
+}
+
+.active {
+  color: aqua;
+}
