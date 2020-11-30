@@ -23,19 +23,28 @@ function TodoItem(props) {
     const { checkBox, deleted, edit, submitItem, submitKey } = props;
 
 
-    const handlCheckbox = (e, submitKey) => {
+    const handlCheckbox = (submitKey) => {
         if (!checkBox) return;
-        checkBox(e, submitKey);
+        return (e) => (
+            checkBox(e, submitKey)
+        );
+
     }
 
     const handleDelete = (submitKey, deleted) => {
         if (!deleted) return;
-        deleted(submitKey);
+        return () => (
+            deleted(submitKey)
+        );
+
     }
 
     const handleEdit = (submitKey, submitItem, edit) => {
         if (!edit) return;
-        edit(submitKey, submitItem);
+        return () => (
+            edit(submitKey, submitItem)
+        );
+
     }
 
     return (
@@ -44,7 +53,7 @@ function TodoItem(props) {
                 <input
                     type='checkbox'
                     className='click-checkbox'
-                    onChange={(e) => handlCheckbox(e, submitKey)}
+                    onChange={() => handlCheckbox(submitKey)}
                 >
                 </input>
                 <div
@@ -56,11 +65,11 @@ function TodoItem(props) {
             </div>
             <div className='icon-bt'>
                 <RiCloseCircleLine
-                    onClick={() => handleDelete(submitKey, deleted)}
+                    onClick={handleDelete(submitKey, deleted)}
                     className='delete-icon'
                 />
                 <TiEdit
-                    onClick={() => handleEdit(submitKey, submitItem, edit)}
+                    onClick={handleEdit(submitKey, submitItem, edit)}
                     className='edit-icon'
                 />
             </div>
