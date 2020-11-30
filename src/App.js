@@ -7,25 +7,25 @@ import TodoForm from './components/TodoForm';
 const App = () => {
   const typeStringChange = useRef(null);
 
-  const [state, setState] = useState({
-    nameTodo: '',
-    listFilter: [],
-    todoList: [
-      { done: false, name: 'hoc English' },
-      { done: false, name: 'hoc France' }
-    ],
-    key: '',
-    type: 'Add',
-    keyEdit: null,
-    pageChange: {
-      page: 1,
-      limit: 5,
+  const [state, setState] = useState(() => {
+
+    const initialFilter = JSON.parse(localStorage.getItem('Box-Filter')) || [];
+
+    return {
+      nameTodo: '',
+      listFilter: [],
+      todoList: [...initialFilter],
+      key: '',
+      type: 'Add',
+      keyEdit: null,
+      pageChange: {
+        page: 1,
+        limit: 5,
+      }
     }
   });
 
   const handlePageValue = (pages) => {
-    const { page, limit } = state.pageChange;
-    console.log('page', page, 'limit', limit);
     setState((preState) => ({
       ...preState,
       pageChange: {
@@ -33,7 +33,6 @@ const App = () => {
         limit: 5,
       }
     }))
-    console.log('pageChange', state.pageChange);
   }
 
   useEffect(() => {
@@ -155,6 +154,9 @@ const App = () => {
         ...prevState,
         type: 'Add',
       }));
+    }
+    if (type !== 'Search') {
+      localStorage.setItem('Box-Filter', JSON.stringify(arr))
     }
   };
 

@@ -28,12 +28,14 @@ function TodoForm(props) {
         onFormChange(e);
     };
 
-    const onHandleChange = (e, nameTodo, ofType, keyEdit) => {
+    const onHandleChange = (nameTodo, ofType, keyEdit, onFormHandleChange) => {
         if (!onFormHandleChange) return;
-        onFormHandleChange(e, nameTodo, ofType, keyEdit)
+        return (e) => {
+            onFormHandleChange(e, nameTodo, ofType, keyEdit)
+        }
     }
 
-    const handleSearch = () => {
+    const handleSearch = (onFormHandleSearch) => {
         if (!onFormHandleSearch) return;
         onFormHandleSearch();
     }
@@ -42,7 +44,7 @@ function TodoForm(props) {
         <div className='todo-header'>
             <div className='todo-title'>
                 <h2>Board Plan</h2>
-                {ofType !== 'Search' && <BiSearch className='icon-search' onClick={handleSearch} />}
+                {ofType !== 'Search' && <BiSearch className='icon-search' onClick={() => handleSearch(onFormHandleSearch)} />}
             </div>
 
             <form className='todo-form'>
@@ -58,7 +60,7 @@ function TodoForm(props) {
 
                 <button
                     className='todo-button'
-                    onClick={(e) => onHandleChange(e, nameTodo, ofType, keyEdit)}
+                    onClick={onHandleChange(nameTodo, ofType, keyEdit, onFormHandleChange)}
                 >
                     {ofType}
                 </button>

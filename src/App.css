@@ -22,7 +22,7 @@ body {
   display: flex;
   flex-direction: column;
   margin: 208px auto;
-  min-height: 504px;
+  min-height: 630px;
   border-radius: 10px;
 }
 
